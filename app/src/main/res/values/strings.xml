@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">MyTeamFantacalcio</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_club">Club description</string>
+    <string name="menu_palmares">Palmares</string>
+    <string name="menu_squad">Players</string>
+    <string name="menu_top">Top Action</string>
+
+    <string name="team_logo">Team logo</string>
+    <string name="team_name">Team name</string>
+
+    <string name="nav_open">OPEN</string>
+    <string name="nav_close">CLOSE</string>
+
+    <string name="palm_comp_hint">Insert competition name</string>
+    <string name="palm_pos_hint">Insert your position</string>
+    <string name="palm_year_hint">Insert year</string>
+
+    <string name="add">Add</string>
+    <string name="clear">Clear</string>
+    <string name="exit">Finish</string>
+    <string name="edit">Edit</string>
+
+    <string name="hint_name">Name</string>
+    <string name="hint_stadium">Stadium</string>
+    <string name="hint_year">Year</string>
+
+    <string name="message_no_change">You are already in this page</string>
+    <string name="message_invalid_input">All fields must be filled</string>
+    <string name="message_done">Done!</string>
+
+    <string name="desc_foundation_year">Founded in</string>
+    <string name="desc_by">by</string>
+    <string name="desc_stadium">Stadium name:</string>
+    <string name="desc_coach">Coach name:</string>
+</resources>
