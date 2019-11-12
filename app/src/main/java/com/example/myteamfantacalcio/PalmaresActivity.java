@@ -13,20 +13,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class PalmaresActivity extends AppCompatActivity {
+public class PalmaresActivity extends AppCompatActivity implements CupsAdapter.OnListItemClickListener{
 
     CompetitionViewModel competitionViewModel;
 
@@ -81,14 +76,13 @@ public class PalmaresActivity extends AppCompatActivity {
         cupsList.setLayoutManager(new LinearLayoutManager(this));
 
         //Adapter for RecyclerView
-        cupsAdapter = new CupsAdapter();
+        cupsAdapter = new CupsAdapter(this);
         cupsList.setAdapter(cupsAdapter);
 
-        competitionViewModel = ViewModelProviders.of(this).get(CompetitionViewModel.class); //This is the Log error message: "Emulator: Trying to erase a non-existent color buffer with handle 0"
+        competitionViewModel = ViewModelProviders.of(this).get(CompetitionViewModel.class);
         competitionViewModel.getAllCompetitions().observe(this, new Observer<List<Competition>>() {
             @Override
             public void onChanged(List<Competition> competitions) {
-                if(!competitions.isEmpty())
                     cupsAdapter.setCompetitions(competitions);
             }
         });
@@ -127,52 +121,8 @@ public class PalmaresActivity extends AppCompatActivity {
         }
     }
 
-    public class CupsAdapter extends RecyclerView.Adapter<CupsAdapter.ViewHolder>{
-        private List<Competition> allCompetitions = new ArrayList<>();
-
-        public CupsAdapter() {
-            allCompetitions.add(new Competition("er","1","asdsa"));
-        }
-
-        public void setCompetitions(List<Competition> competitions){
-            this.allCompetitions = competitions;
-            notifyDataSetChanged();
-        }
-
-        @NonNull
-        @Override
-        public CupsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            View view = inflater.inflate(R.layout.competition_list_item, parent, false);
-            return new ViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            holder.compName.setText(allCompetitions.get(position).getName());
-            holder.compYear.setText(allCompetitions.get(position).getYear());
-            holder.compPos.setText(allCompetitions.get(position).getPosition());
-        }
-
-        @Override
-        public int getItemCount() {
-            int size = 0;
-            if(allCompetitions != null)
-                size = allCompetitions.size();
-            return size;
-        }
-
-        class ViewHolder extends RecyclerView.ViewHolder{
-            TextView compName;
-            TextView compYear;
-            TextView compPos;
-
-            ViewHolder(View view){
-                super(view);
-                compName = findViewById(R.id.textCompetitionName);
-                compYear = findViewById(R.id.textCompetitionYear);
-                compPos = findViewById(R.id.textCompetitionPos);
-            }
-        }
+    @Override
+    public void onListItemClick(int clickedItemIndex) {
+        competitionViewModel.deleteSingleCompetition(competitionViewModel.getAllCompetitions().getValue().get(clickedItemIndex));
     }
 }
