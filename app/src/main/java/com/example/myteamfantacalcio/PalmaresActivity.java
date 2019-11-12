@@ -28,8 +28,6 @@ import java.util.List;
 
 public class PalmaresActivity extends AppCompatActivity {
 
-    RecyclerView cupsList;
-    CupsAdapter cupsAdapter;
     CompetitionViewModel competitionViewModel;
 
     @Override
@@ -76,6 +74,8 @@ public class PalmaresActivity extends AppCompatActivity {
             }
         });
         //Layout components
+        RecyclerView cupsList;
+        final CupsAdapter cupsAdapter;
         cupsList = findViewById(R.id.cupsRecyclerView);
         cupsList.hasFixedSize();
         cupsList.setLayoutManager(new LinearLayoutManager(this));
@@ -84,7 +84,7 @@ public class PalmaresActivity extends AppCompatActivity {
         cupsAdapter = new CupsAdapter();
         cupsList.setAdapter(cupsAdapter);
 
-        competitionViewModel = ViewModelProviders.of(this).get(CompetitionViewModel.class);
+        competitionViewModel = ViewModelProviders.of(this).get(CompetitionViewModel.class); //This is the Log error message: "Emulator: Trying to erase a non-existent color buffer with handle 0"
         competitionViewModel.getAllCompetitions().observe(this, new Observer<List<Competition>>() {
             @Override
             public void onChanged(List<Competition> competitions) {
