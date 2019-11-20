@@ -33,4 +33,6 @@
     <string name="desc_by">by</string>
     <string name="desc_stadium">Stadium name:</string>
     <string name="desc_coach">Coach name:</string>
+
+    <string name="login_welcome">Welcome Mr. </string>
 </resources>

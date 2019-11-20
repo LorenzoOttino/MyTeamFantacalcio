@@ -1,10 +1,12 @@
-package com.example.myteamfantacalcio;
+package com.example.myteamfantacalcio.Database;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+
+import com.example.myteamfantacalcio.Database.Competition;
 
 import java.util.List;
 @Dao

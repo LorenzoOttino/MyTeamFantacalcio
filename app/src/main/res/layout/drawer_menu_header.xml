@@ -11,13 +11,15 @@
         android:layout_width="wrap_content"
         android:layout_height="74dp"
         android:contentDescription="@string/team_logo"
+        android:src="@android:drawable/btn_star_big_on"
         />
 
     <TextView
         android:id="@+id/header_team_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/team_name"
+        android:text="CF Lorenzo Juniors"
+        android:textColor="@color/colorPrimaryLight"
         />
 
 </LinearLayout>

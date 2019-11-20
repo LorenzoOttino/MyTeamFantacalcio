@@ -1,4 +1,4 @@
-package com.example.myteamfantacalcio;
+package com.example.myteamfantacalcio.Database;
 
 import android.app.Application;
 import android.os.AsyncTask;

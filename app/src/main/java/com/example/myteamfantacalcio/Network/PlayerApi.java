@@ -1,4 +1,4 @@
-package com.example.myteamfantacalcio;
+package com.example.myteamfantacalcio.Network;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

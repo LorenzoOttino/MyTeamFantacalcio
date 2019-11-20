@@ -17,13 +17,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.myteamfantacalcio.Adapters.CupsAdapter;
+import com.example.myteamfantacalcio.Database.Competition;
+import com.example.myteamfantacalcio.Database.CompetitionViewModel;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 
 public class PalmaresActivity extends AppCompatActivity implements CupsAdapter.OnListItemClickListener{
 
-    CompetitionViewModel competitionViewModel;
+    CompetitionViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,8 +82,8 @@ public class PalmaresActivity extends AppCompatActivity implements CupsAdapter.O
         cupsAdapter = new CupsAdapter(this);
         cupsList.setAdapter(cupsAdapter);
 
-        competitionViewModel = ViewModelProviders.of(this).get(CompetitionViewModel.class);
-        competitionViewModel.getAllCompetitions().observe(this, new Observer<List<Competition>>() {
+        viewModel = ViewModelProviders.of(this).get(CompetitionViewModel.class);
+        viewModel.getAllCompetitions().observe(this, new Observer<List<Competition>>() {
             @Override
             public void onChanged(List<Competition> competitions) {
                     cupsAdapter.setCompetitions(competitions);
@@ -112,17 +115,17 @@ public class PalmaresActivity extends AppCompatActivity implements CupsAdapter.O
             String comp = data.getStringExtra("COMPETITION_EXTRA");
             String year = data.getStringExtra("YEAR_EXTRA");
             String pos = data.getStringExtra("POSITION_EXTRA");
-            competitionViewModel.insertCompetition(new Competition(comp, year, pos));
+            viewModel.insertCompetition(new Competition(comp, year, pos));
             Toast.makeText(getApplicationContext(), R.string.message_done, Toast.LENGTH_SHORT).show();
         }
         if((requestCode == 1) &&(resultCode == 2)){
-            competitionViewModel.deleteAllCompetitions();
+            viewModel.deleteAllCompetitions();
             Toast.makeText(getApplicationContext(), R.string.message_done, Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void onListItemClick(int clickedItemIndex) {
-        competitionViewModel.deleteSingleCompetition(competitionViewModel.getAllCompetitions().getValue().get(clickedItemIndex));
+        viewModel.deleteSingleCompetition(viewModel.getAllCompetitions().getValue().get(clickedItemIndex));
     }
 }

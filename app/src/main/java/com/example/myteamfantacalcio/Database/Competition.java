@@ -1,4 +1,4 @@
-package com.example.myteamfantacalcio;
+package com.example.myteamfantacalcio.Database;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;

@@ -1,4 +1,4 @@
-package com.example.myteamfantacalcio;
+package com.example.myteamfantacalcio.Database;
 
 import android.content.Context;
 

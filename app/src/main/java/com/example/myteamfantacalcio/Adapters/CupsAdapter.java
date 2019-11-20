@@ -1,4 +1,4 @@
-package com.example.myteamfantacalcio;
+package com.example.myteamfantacalcio.Adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +8,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myteamfantacalcio.Database.Competition;
+import com.example.myteamfantacalcio.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +18,7 @@ public class CupsAdapter extends RecyclerView.Adapter<CupsAdapter.ViewHolder>{
     private List<Competition> allCompetitions;
     final private OnListItemClickListener mOnListItemClickListener;
 
-    CupsAdapter(OnListItemClickListener mOnListItemClickListener){
+    public CupsAdapter(OnListItemClickListener mOnListItemClickListener){
         allCompetitions = new ArrayList<>();
         this.mOnListItemClickListener = mOnListItemClickListener;
     }
