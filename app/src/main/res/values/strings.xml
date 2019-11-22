@@ -20,10 +20,12 @@
     <string name="clear">Clear</string>
     <string name="exit">Finish</string>
     <string name="edit">Edit</string>
+    <string name="calculate">Calculate</string>
 
     <string name="hint_name">Name</string>
     <string name="hint_stadium">Stadium</string>
     <string name="hint_year">Year</string>
+    <string name="hint_day">Insert day</string>
 
     <string name="message_no_change">You are already in this page</string>
     <string name="message_invalid_input">All fields must be filled</string>
@@ -35,4 +37,9 @@
     <string name="desc_coach">Coach name:</string>
 
     <string name="login_welcome">Welcome Mr. </string>
+
+    <string name="your_score">Total score:</string>
+    <string name="default_player_name">No player</string>
+    <string name="starter">Starter</string>
+    <string name="mark">Mark</string>
 </resources>

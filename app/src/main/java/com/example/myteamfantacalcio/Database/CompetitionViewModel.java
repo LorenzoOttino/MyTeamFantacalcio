@@ -1,15 +1,10 @@
 package com.example.myteamfantacalcio.Database;
 
 import android.app.Application;
-import android.content.SharedPreferences;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.example.myteamfantacalcio.Database.Competition;
-import com.example.myteamfantacalcio.Database.CompetitionRepostiory;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class CompetitionViewModel extends AndroidViewModel {

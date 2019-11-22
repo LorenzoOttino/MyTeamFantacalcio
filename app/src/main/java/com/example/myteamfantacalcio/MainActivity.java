@@ -5,28 +5,50 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myteamfantacalcio.Adapters.FullPlayerAdapter;
+import com.example.myteamfantacalcio.Network.Player;
+import com.example.myteamfantacalcio.Network.PlayerApi;
+import com.example.myteamfantacalcio.Network.PlayerResponse;
+import com.example.myteamfantacalcio.Network.ServiceGenerator;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class MainActivity extends AppCompatActivity implements FullPlayerAdapter.OnListItemClickListener{
 
     private static final int RC_SIGN_IN = 123;
     FirebaseUser user;
+    RecyclerView fullPlayersList;
+    RecyclerView.Adapter fullPlayersAdapter;
+    ArrayList<Player> teamPlayers;
+    TextView res;
+    EditText matchDay;
+    Button calc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +92,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        //Layout
+        calc = findViewById(R.id.calculateButton);
+        matchDay = findViewById(R.id.matchDayField);
+        res = findViewById(R.id.scoreField);
 
         //Login with firebase
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -81,6 +107,51 @@ public class MainActivity extends AppCompatActivity {
                     getResources().getString(R.string.login_welcome) + user.getDisplayName(),
                     Toast.LENGTH_SHORT).show();
         }
+
+        //Players Recyclerview
+        fullPlayersList = findViewById(R.id.mainRecyclerview);
+        fullPlayersList.hasFixedSize();
+        fullPlayersList.setLayoutManager(new LinearLayoutManager(this));
+        SharedPreferences sharedPreferences = getSharedPreferences("players_preferences", MODE_PRIVATE);
+        teamPlayers = loadAllPlayers(sharedPreferences);
+        fullPlayersAdapter = new FullPlayerAdapter(teamPlayers, this);
+        fullPlayersList.setAdapter(fullPlayersAdapter);
+
+    }
+
+    public ArrayList<Player> loadAllPlayers(SharedPreferences preferences){
+        ArrayList<String> players = new ArrayList<>();
+        if(teamPlayers == null)
+            teamPlayers = new ArrayList<>();
+        else teamPlayers.clear();
+        String key;
+
+        for (int i = 0; i < 23; i++){
+            key = "player" + i;
+            players.add(preferences.getString(key, "EMPTY_SLOT"));
+            if(!players.get(i).equals("EMPTY_SLOT"))
+                requestPlayer(players.get(i));
+        }
+        return teamPlayers;
+    }
+
+    public void requestPlayer(String playerName){
+        PlayerApi playerApi = ServiceGenerator.getPlayerApi();
+        Call<PlayerResponse> call = playerApi.getPlayer(playerName);
+
+        call.enqueue(new Callback<PlayerResponse>() {
+            @Override
+            public void onResponse(Call<PlayerResponse> call, Response<PlayerResponse> response) {
+                if(response.code() == 200){
+                    teamPlayers.add(response.body().getPlayer());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PlayerResponse> call, Throwable t) {
+                Log.i("Retrofit", "Could not load player");
+            }
+        });
     }
 
     public void createSignInIntent() {
@@ -130,5 +201,22 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         signOut();
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onListItemClick(int clickedItemIndex) {
+        boolean starts = teamPlayers.get(clickedItemIndex).isStarter();
+        teamPlayers.get(clickedItemIndex).setStarter(!starts);
+    }
+
+    public void calculateResult(){
+        int day = Integer.parseInt(matchDay.getText().toString());
+        int result = 0;
+
+        for(Player p : teamPlayers){
+            if(p.isStarter())
+                result += p.getMarks()[day];
+        }
+        res.setText(result);
     }
 }
