@@ -100,19 +100,19 @@ public class TeamRepository {
         }
     }
 
-    public ArrayList<Player>loadAllPlayers(SharedPreferences sharedPreferences){
+    public ArrayList<Player> loadAllPlayers(SharedPreferences sharedPreferences){
         ArrayList<String> players = new ArrayList<>();
         String key;
         String val;
 
-        for (int i = 0; i < 23; i++){
+        /*for (int i = 0; i < 23; i++){
             key = "player" + i;
             val = sharedPreferences.getString(key, "EMPTY_SLOT");
-            players.add(val.trim());
+            players.add(val);
             if(!players.get(i).equals("EMPTY_SLOT")){
                 requestPlayer(players.get(i));
             }
-        }
+        }*/requestPlayer("caterpie");
 
         return new ArrayList<>();
     }
@@ -136,7 +136,7 @@ public class TeamRepository {
 
     }
 
-    public void requestPlayer(final String playerName){
+    public void requestPlayer(String playerName){
         PlayerApi playerApi = ServiceGenerator.getPlayerApi();
         Call<PlayerResponse> call = playerApi.getPlayer(playerName);
 
@@ -150,7 +150,7 @@ public class TeamRepository {
 
             @Override
             public void onFailure(Call<PlayerResponse> call, Throwable t) {
-                Log.i("Retrofit", "Could not load player" + " " +playerName);
+                Log.i("Retrofit", "Could not load player");
             }
         });
     }

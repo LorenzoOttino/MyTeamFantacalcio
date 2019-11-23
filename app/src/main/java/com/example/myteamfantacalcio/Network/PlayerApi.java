@@ -11,6 +11,7 @@ import retrofit2.http.Path;
 */
 
 public interface PlayerApi {
+
     @GET("api/v2/pokemon/{name}")
     Call<PlayerResponse> getPlayer(@Path("name") String name);
 }
