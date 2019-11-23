@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -153,8 +152,6 @@ public class ClubDescriptionActivity extends AppCompatActivity {
     }
 
     public void updateFields(SharedPreferences sharedPreferences){
-        /*
-        clubLogo.setImageResource();*/
         clubName.setText(sharedPreferences.getString("field0", "NOT FOUND"));
         clubFoundation.setText(String.format("%s %s %s %s",
                 getResources().getString(R.string.desc_foundation_year)

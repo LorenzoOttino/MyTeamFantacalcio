@@ -19,14 +19,13 @@ import android.widget.Toast;
 
 import com.example.myteamfantacalcio.Adapters.CupsAdapter;
 import com.example.myteamfantacalcio.Database.Competition;
-import com.example.myteamfantacalcio.Database.CompetitionViewModel;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 
 public class PalmaresActivity extends AppCompatActivity implements CupsAdapter.OnListItemClickListener{
 
-    CompetitionViewModel viewModel;
+    TeamViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +81,7 @@ public class PalmaresActivity extends AppCompatActivity implements CupsAdapter.O
         cupsAdapter = new CupsAdapter(this);
         cupsList.setAdapter(cupsAdapter);
 
-        viewModel = ViewModelProviders.of(this).get(CompetitionViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(TeamViewModel.class);
         viewModel.getAllCompetitions().observe(this, new Observer<List<Competition>>() {
             @Override
             public void onChanged(List<Competition> competitions) {

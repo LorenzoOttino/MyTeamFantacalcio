@@ -5,25 +5,22 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myteamfantacalcio.Adapters.FullPlayerAdapter;
 import com.example.myteamfantacalcio.Network.Player;
-import com.example.myteamfantacalcio.Network.PlayerApi;
-import com.example.myteamfantacalcio.Network.PlayerResponse;
-import com.example.myteamfantacalcio.Network.ServiceGenerator;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,19 +32,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class MainActivity extends AppCompatActivity implements FullPlayerAdapter.OnListItemClickListener{
 
     private static final int RC_SIGN_IN = 123;
+    TeamViewModel teamViewModel;
     FirebaseUser user;
     RecyclerView fullPlayersList;
     RecyclerView.Adapter fullPlayersAdapter;
     ArrayList<Player> teamPlayers;
     TextView res;
-    EditText matchDay;
+    TextView matchDay;
     Button calc;
 
     @Override
@@ -93,9 +87,17 @@ public class MainActivity extends AppCompatActivity implements FullPlayerAdapter
             }
         });
         //Layout
+        teamViewModel = ViewModelProviders.of(this).get(TeamViewModel.class);
         calc = findViewById(R.id.calculateButton);
         matchDay = findViewById(R.id.matchDayField);
         res = findViewById(R.id.scoreField);
+        matchDay.setText("0");
+        calc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                calculateResult();
+            }
+        });
 
         //Login with firebase
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -113,45 +115,27 @@ public class MainActivity extends AppCompatActivity implements FullPlayerAdapter
         fullPlayersList.hasFixedSize();
         fullPlayersList.setLayoutManager(new LinearLayoutManager(this));
         SharedPreferences sharedPreferences = getSharedPreferences("players_preferences", MODE_PRIVATE);
-        teamPlayers = loadAllPlayers(sharedPreferences);
+        teamPlayers = teamViewModel.loadAllPlayers(sharedPreferences);
+        /*int[] vett = {0,1,2,3,4};
+        teamPlayers = new ArrayList<>();
+        teamPlayers.add(new Player(1, "A", vett));
+        teamPlayers.add(new Player(2, "B", vett));
+        teamPlayers.add(new Player(3, "C", vett));
+        teamPlayers.add(new Player(4, "D", vett));
+        teamPlayers.add(new Player(5, "E", vett));
+        teamPlayers.add(new Player(6, "F", vett));
+        teamPlayers.add(new Player(7, "G", vett));
+        teamPlayers.add(new Player(8, "H", vett));
+        teamPlayers.add(new Player(9, "I", vett));
+        teamPlayers.add(new Player(10, "J", vett));
+        teamPlayers.add(new Player(11, "K", vett));
+        teamPlayers.add(new Player(12, "L", vett));
+        teamPlayers.add(new Player(13, "M", vett));
+        teamPlayers.add(new Player(14, "N", vett));
+        teamPlayers.add(new Player(15, "O", vett));*/
         fullPlayersAdapter = new FullPlayerAdapter(teamPlayers, this);
         fullPlayersList.setAdapter(fullPlayersAdapter);
 
-    }
-
-    public ArrayList<Player> loadAllPlayers(SharedPreferences preferences){
-        ArrayList<String> players = new ArrayList<>();
-        if(teamPlayers == null)
-            teamPlayers = new ArrayList<>();
-        else teamPlayers.clear();
-        String key;
-
-        for (int i = 0; i < 23; i++){
-            key = "player" + i;
-            players.add(preferences.getString(key, "EMPTY_SLOT"));
-            if(!players.get(i).equals("EMPTY_SLOT"))
-                requestPlayer(players.get(i));
-        }
-        return teamPlayers;
-    }
-
-    public void requestPlayer(String playerName){
-        PlayerApi playerApi = ServiceGenerator.getPlayerApi();
-        Call<PlayerResponse> call = playerApi.getPlayer(playerName);
-
-        call.enqueue(new Callback<PlayerResponse>() {
-            @Override
-            public void onResponse(Call<PlayerResponse> call, Response<PlayerResponse> response) {
-                if(response.code() == 200){
-                    teamPlayers.add(response.body().getPlayer());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<PlayerResponse> call, Throwable t) {
-                Log.i("Retrofit", "Could not load player");
-            }
-        });
     }
 
     public void createSignInIntent() {
@@ -210,13 +194,35 @@ public class MainActivity extends AppCompatActivity implements FullPlayerAdapter
     }
 
     public void calculateResult(){
-        int day = Integer.parseInt(matchDay.getText().toString());
-        int result = 0;
+        String val = matchDay.getText().toString();
+        int day = Integer.parseInt(val);
+        if(teamPlayers != null) {
+            if (day < teamPlayers.get(0).getMarks().length) {
+                int result = 0;
+                int[] v;
 
-        for(Player p : teamPlayers){
-            if(p.isStarter())
-                result += p.getMarks()[day];
+                for (Player p : teamPlayers) {
+                    if (p.isStarter()) {
+                        v = p.getMarks();
+                        result += v[day];
+                    }
+                }
+                res.setText(Integer.toString(result));
+            } else
+                Toast.makeText(getApplicationContext(), getString(R.string.meaasge_insert_day), Toast.LENGTH_SHORT).show();
         }
-        res.setText(result);
+    }
+
+    public void plus(View v){
+        int val = Integer.parseInt(matchDay.getText().toString());
+        val++;
+        matchDay.setText(String.valueOf(val));
+    }
+
+    public void less(View v){
+        int val = Integer.parseInt(matchDay.getText().toString());
+        val--;
+        if (val < 0) val = 0;
+        matchDay.setText(String.valueOf(val));
     }
 }

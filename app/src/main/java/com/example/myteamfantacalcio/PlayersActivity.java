@@ -5,6 +5,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,7 +13,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.myteamfantacalcio.Adapters.PlayerNameAdapter;
@@ -24,6 +24,7 @@ public class PlayersActivity extends AppCompatActivity implements PlayerNameAdap
 
     RecyclerView playerNames;
     RecyclerView.Adapter playerNameAdapter;
+    TeamViewModel teamViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,32 +75,19 @@ public class PlayersActivity extends AppCompatActivity implements PlayerNameAdap
         playerNames = findViewById(R.id.playersRecyclerview);
         playerNames.hasFixedSize();
         playerNames.setLayoutManager(new LinearLayoutManager(this));
+        teamViewModel = ViewModelProviders.of(this).get(TeamViewModel.class);
         ArrayList<String> allPlayers;
         SharedPreferences sharedPreferences = getSharedPreferences("players_preferences", MODE_PRIVATE);
-        allPlayers = loadAllPlayers(sharedPreferences);
+        allPlayers = teamViewModel.loadAllPlayersStrings(sharedPreferences);
 
         playerNameAdapter = new PlayerNameAdapter(allPlayers, this);
         playerNames.setAdapter(playerNameAdapter);
     }
 
-    public ArrayList<String> loadAllPlayers(SharedPreferences preferences){
-        ArrayList<String> players = new ArrayList<>();
-        String key;
-
-        for (int i = 0; i < 23; i++){
-            key = "player" + i;
-            players.add(preferences.getString(key, "EMPTY_SLOT"));
-        }
-        return players;
-    }
-
     @Override
     public void onListItemClick(int clickedItemIndex, String message) {
         SharedPreferences preferences = getSharedPreferences("players_preferences", MODE_PRIVATE);
-        String key = "player" + clickedItemIndex;
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(key, message);
-        editor.apply();
+        teamViewModel.updatePlayerString(preferences, clickedItemIndex, message);
         Toast.makeText(getApplicationContext(), R.string.message_done, Toast.LENGTH_SHORT).show();
     }
 }

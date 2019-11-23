@@ -30,6 +30,7 @@
     <string name="message_no_change">You are already in this page</string>
     <string name="message_invalid_input">All fields must be filled</string>
     <string name="message_done">Done!</string>
+    <string name="meaasge_insert_day">Please select a correct match day</string>
 
     <string name="desc_foundation_year">Founded in</string>
     <string name="desc_by">by</string>
@@ -38,7 +39,7 @@
 
     <string name="login_welcome">Welcome Mr. </string>
 
-    <string name="your_score">Total score:</string>
+    <string name="your_score">Total:</string>
     <string name="default_player_name">No player</string>
     <string name="starter">Starter</string>
     <string name="mark">Mark</string>
