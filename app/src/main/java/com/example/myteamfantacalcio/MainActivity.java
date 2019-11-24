@@ -202,20 +202,18 @@ public class MainActivity extends AppCompatActivity implements FullPlayerAdapter
         String val = matchDay.getText().toString();
         int day = Integer.parseInt(val);
         if(teamViewModel.getAllPlayers() != null) {
-            if (day < teamViewModel.getAllPlayers().get(0).getMarks().length) {
                 int result = 0;
                 int[] v;
 
-                for (Player p : teamViewModel.loadAllPlayers(sharedPreferences).getValue()) {
+                for (Player p : teamViewModel.getAllPlayers()) {
                     if (p.isStarter()) {
                         v = p.getMarks();
                         result += v[day];
                     }
                 }
                 res.setText(Integer.toString(result));
-            } else
-                Toast.makeText(getApplicationContext(), getString(R.string.meaasge_insert_day), Toast.LENGTH_SHORT).show();
-        }
+        }else
+            Toast.makeText(getApplicationContext(), getString(R.string.meaasge_insert_day), Toast.LENGTH_SHORT).show();
     }
 
     public void plus(View v){

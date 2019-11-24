@@ -108,6 +108,7 @@ public class TeamRepository {
         ArrayList<String> players = new ArrayList<>();
         String key;
         String val;
+        playerList = new ArrayList<>();
 
         for (int i = 0; i < 23; i++){
             key = "player" + i;
