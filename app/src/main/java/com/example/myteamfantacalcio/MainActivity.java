@@ -137,7 +137,8 @@ public class MainActivity extends AppCompatActivity implements FullPlayerAdapter
         teamViewModel.loadAllPlayers(sharedPreferences).observe(this, new Observer<List<Player>>() {
             @Override
             public void onChanged(List<Player> players) {
-                fullPlayersAdapter.setPlayers(players);
+                if(!players.isEmpty())
+                    fullPlayersAdapter.setPlayers(players);
             }
         });
     }
