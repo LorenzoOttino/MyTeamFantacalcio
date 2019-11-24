@@ -40,6 +40,10 @@ public class TeamViewModel extends AndroidViewModel {
         return teamRepository.loadAllPlayers(preferences);
     }
 
+    public List<Player> getAllPlayers(){
+        return teamRepository.getAllPlayers();
+    }
+
     public ArrayList<String> loadAllPlayersStrings(SharedPreferences preferences){
         return teamRepository.loadAllPlayersStrings(preferences);
     }

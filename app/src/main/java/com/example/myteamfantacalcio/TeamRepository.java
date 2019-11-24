@@ -119,6 +119,10 @@ public class TeamRepository {
         return allPlayers;
     }
 
+    public List<Player> getAllPlayers(){
+        return allPlayers.getValue();
+    }
+
     public ArrayList<String> loadAllPlayersStrings(SharedPreferences preferences){
         ArrayList<String> players = new ArrayList<>();
         String key;

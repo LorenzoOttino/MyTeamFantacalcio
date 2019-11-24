@@ -39,7 +39,8 @@ public class MainActivity extends AppCompatActivity implements FullPlayerAdapter
     TeamViewModel teamViewModel;
     FirebaseUser user;
     RecyclerView fullPlayersList;
-    ArrayList<Player> teamPlayers;
+    SharedPreferences sharedPreferences;
+    List<Player> teamPlayers;
     TextView res;
     TextView matchDay;
     Button calc;
@@ -57,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements FullPlayerAdapter
                 new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.nav_open, R.string.nav_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -114,8 +114,7 @@ public class MainActivity extends AppCompatActivity implements FullPlayerAdapter
         fullPlayersList = findViewById(R.id.mainRecyclerview);
         fullPlayersList.hasFixedSize();
         fullPlayersList.setLayoutManager(new LinearLayoutManager(this));
-        SharedPreferences sharedPreferences = getSharedPreferences("players_preferences", MODE_PRIVATE);
-        //teamPlayers = teamViewModel.loadAllPlayers(sharedPreferences);
+        sharedPreferences = getSharedPreferences("players_preferences", MODE_PRIVATE);
         /*int[] vett = {0,1,2,3,4};
         teamPlayers = new ArrayList<>();
         teamPlayers.add(new Player(1, "A", vett));
@@ -142,7 +141,6 @@ public class MainActivity extends AppCompatActivity implements FullPlayerAdapter
                 fullPlayersAdapter.setPlayers(players);
             }
         });
-
     }
 
     public void createSignInIntent() {
@@ -196,6 +194,8 @@ public class MainActivity extends AppCompatActivity implements FullPlayerAdapter
 
     @Override
     public void onListItemClick(int clickedItemIndex) {
+        if (teamPlayers == null)
+            teamPlayers = teamViewModel.getAllPlayers();
         boolean starts = teamPlayers.get(clickedItemIndex).isStarter();
         teamPlayers.get(clickedItemIndex).setStarter(!starts);
     }
@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements FullPlayerAdapter
                 int result = 0;
                 int[] v;
 
-                for (Player p : teamPlayers) {
+                for (Player p : teamViewModel.loadAllPlayers(sharedPreferences).getValue()) {
                     if (p.isStarter()) {
                         v = p.getMarks();
                         result += v[day];
