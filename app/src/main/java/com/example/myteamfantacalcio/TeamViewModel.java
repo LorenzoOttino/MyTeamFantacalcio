@@ -36,7 +36,7 @@ public class TeamViewModel extends AndroidViewModel {
         return teamRepository.getAllCompetitions();
     }
 
-    public ArrayList<Player> loadAllPlayers(SharedPreferences preferences){
+    public LiveData<List<Player>> loadAllPlayers(SharedPreferences preferences){
         return teamRepository.loadAllPlayers(preferences);
     }
 

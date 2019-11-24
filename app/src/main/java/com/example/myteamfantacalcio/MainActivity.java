@@ -5,6 +5,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements FullPlayerAdapter
     TeamViewModel teamViewModel;
     FirebaseUser user;
     RecyclerView fullPlayersList;
-    RecyclerView.Adapter fullPlayersAdapter;
     ArrayList<Player> teamPlayers;
     TextView res;
     TextView matchDay;
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements FullPlayerAdapter
         fullPlayersList.hasFixedSize();
         fullPlayersList.setLayoutManager(new LinearLayoutManager(this));
         SharedPreferences sharedPreferences = getSharedPreferences("players_preferences", MODE_PRIVATE);
-        teamPlayers = teamViewModel.loadAllPlayers(sharedPreferences);
+        //teamPlayers = teamViewModel.loadAllPlayers(sharedPreferences);
         /*int[] vett = {0,1,2,3,4};
         teamPlayers = new ArrayList<>();
         teamPlayers.add(new Player(1, "A", vett));
@@ -133,8 +133,15 @@ public class MainActivity extends AppCompatActivity implements FullPlayerAdapter
         teamPlayers.add(new Player(13, "M", vett));
         teamPlayers.add(new Player(14, "N", vett));
         teamPlayers.add(new Player(15, "O", vett));*/
-        fullPlayersAdapter = new FullPlayerAdapter(teamPlayers, this);
+        final FullPlayerAdapter fullPlayersAdapter = new FullPlayerAdapter(this);
         fullPlayersList.setAdapter(fullPlayersAdapter);
+
+        teamViewModel.loadAllPlayers(sharedPreferences).observe(this, new Observer<List<Player>>() {
+            @Override
+            public void onChanged(List<Player> players) {
+                fullPlayersAdapter.setPlayers(players);
+            }
+        });
 
     }
 

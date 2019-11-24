@@ -27,12 +27,14 @@ public class TeamRepository {
     private CompetitionDao competitionDao;
     private static TeamRepository instance;
     private LiveData<List<Competition>> allCompetitions;
+    private MutableLiveData<List<Player>> allPlayers;
     private MutableLiveData<Player> requestedPlayer;
 
     private TeamRepository(Application application){
         CompetitionDatabase database = CompetitionDatabase.getInstance(application);
         competitionDao = database.compDao();
         allCompetitions = competitionDao.getAllCompetitions();
+        allPlayers = new MutableLiveData<>();
         requestedPlayer = new MutableLiveData<>();
     }
 
@@ -100,21 +102,21 @@ public class TeamRepository {
         }
     }
 
-    public ArrayList<Player> loadAllPlayers(SharedPreferences sharedPreferences){
+    public LiveData<List<Player>> loadAllPlayers(SharedPreferences sharedPreferences){
         ArrayList<String> players = new ArrayList<>();
         String key;
         String val;
 
-        /*for (int i = 0; i < 23; i++){
+        for (int i = 0; i < 23; i++){
             key = "player" + i;
             val = sharedPreferences.getString(key, "EMPTY_SLOT");
             players.add(val);
             if(!players.get(i).equals("EMPTY_SLOT")){
                 requestPlayer(players.get(i));
             }
-        }*/requestPlayer("caterpie");
+        }//requestPlayer("caterpie");
 
-        return new ArrayList<>();
+        return allPlayers;
     }
 
     public ArrayList<String> loadAllPlayersStrings(SharedPreferences preferences){
@@ -144,7 +146,10 @@ public class TeamRepository {
             @Override
             public void onResponse(Call<PlayerResponse> call, Response<PlayerResponse> response) {
                 if(response.isSuccessful()){
-                    requestedPlayer.postValue(response.body().getPlayer());
+                    List<Player> players = allPlayers.getValue();
+                    players.add(response.body().getPlayer());
+                    allPlayers.postValue(players);
+
                 }
             }
 

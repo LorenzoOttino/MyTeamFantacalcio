@@ -13,14 +13,20 @@ import com.example.myteamfantacalcio.Network.Player;
 import com.example.myteamfantacalcio.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FullPlayerAdapter extends RecyclerView.Adapter<FullPlayerAdapter.ViewHolder> {
-    private ArrayList<Player> players;
+    private List<Player> players;
     final private OnListItemClickListener itemClickListener;
 
-    public FullPlayerAdapter(ArrayList<Player> players, OnListItemClickListener onListItemClickListener){
-        this.players = players;
+    public FullPlayerAdapter(OnListItemClickListener onListItemClickListener){
         this.itemClickListener = onListItemClickListener;
+        players = new ArrayList<>();
+    }
+
+    public void setPlayers(List<Player> players){
+        this.players = players;
+        notifyDataSetChanged();
     }
 
     @NonNull
