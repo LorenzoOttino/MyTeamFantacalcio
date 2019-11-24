@@ -29,6 +29,7 @@ public class TeamRepository {
     private LiveData<List<Competition>> allCompetitions;
     private MutableLiveData<List<Player>> allPlayers;
     private MutableLiveData<Player> requestedPlayer;
+    private List<Player> playerList;
 
     private TeamRepository(Application application){
         CompetitionDatabase database = CompetitionDatabase.getInstance(application);
@@ -36,6 +37,7 @@ public class TeamRepository {
         allCompetitions = competitionDao.getAllCompetitions();
         allPlayers = new MutableLiveData<>();
         requestedPlayer = new MutableLiveData<>();
+        playerList = new ArrayList<>();
     }
 
     public static synchronized TeamRepository getInstance(Application application){
@@ -110,8 +112,8 @@ public class TeamRepository {
         for (int i = 0; i < 23; i++){
             key = "player" + i;
             val = sharedPreferences.getString(key, "EMPTY_SLOT");
-            players.add(val);
-            if(!players.get(i).equals("EMPTY_SLOT")){
+            if(!val.equals("EMPTY_SLOT")){
+                players.add(val);
                 requestPlayer(players.get(i));
             }
         }//requestPlayer("caterpie");
@@ -150,11 +152,9 @@ public class TeamRepository {
             @Override
             public void onResponse(Call<PlayerResponse> call, Response<PlayerResponse> response) {
                 if(response.isSuccessful()){
-                    List<Player> players = allPlayers.getValue();
                     requestedPlayer.postValue(response.body().getPlayer());
-                    players.add(requestedPlayer.getValue());
-                    allPlayers.postValue(players);
-
+                    playerList.add(requestedPlayer.getValue());
+                    allPlayers.postValue(playerList);
                 }
             }
 
