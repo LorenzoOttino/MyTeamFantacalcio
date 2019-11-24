@@ -122,7 +122,7 @@ public class TeamRepository {
     }
 
     public List<Player> getAllPlayers(){
-        return allPlayers.getValue();
+        return playerList;
     }
 
     public ArrayList<String> loadAllPlayersStrings(SharedPreferences preferences){

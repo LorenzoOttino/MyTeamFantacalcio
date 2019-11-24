@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements FullPlayerAdapter
     FirebaseUser user;
     RecyclerView fullPlayersList;
     SharedPreferences sharedPreferences;
-    List<Player> teamPlayers;
     TextView res;
     TextView matchDay;
     Button calc;
@@ -194,17 +193,15 @@ public class MainActivity extends AppCompatActivity implements FullPlayerAdapter
 
     @Override
     public void onListItemClick(int clickedItemIndex) {
-        if (teamPlayers == null)
-            teamPlayers = teamViewModel.getAllPlayers();
-        boolean starts = teamPlayers.get(clickedItemIndex).isStarter();
-        teamPlayers.get(clickedItemIndex).setStarter(!starts);
+        boolean starts = teamViewModel.getAllPlayers().get(clickedItemIndex).isStarter();
+        teamViewModel.getAllPlayers().get(clickedItemIndex).setStarter(!starts);
     }
 
     public void calculateResult(){
         String val = matchDay.getText().toString();
         int day = Integer.parseInt(val);
-        if(teamPlayers != null) {
-            if (day < teamPlayers.get(0).getMarks().length) {
+        if(teamViewModel.getAllPlayers() != null) {
+            if (day < teamViewModel.getAllPlayers().get(0).getMarks().length) {
                 int result = 0;
                 int[] v;
 
