@@ -144,7 +144,7 @@ public class TeamRepository {
             @Override
             public void onResponse(Call<PlayerResponse> call, Response<PlayerResponse> response) {
                 if(response.isSuccessful()){
-                    requestedPlayer.setValue(response.body().getPlayer());
+                    requestedPlayer.postValue(response.body().getPlayer());
                 }
             }
 
