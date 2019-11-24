@@ -147,7 +147,8 @@ public class TeamRepository {
             public void onResponse(Call<PlayerResponse> call, Response<PlayerResponse> response) {
                 if(response.isSuccessful()){
                     List<Player> players = allPlayers.getValue();
-                    players.add(response.body().getPlayer());
+                    requestedPlayer.postValue(response.body().getPlayer());
+                    players.add(requestedPlayer.getValue());
                     allPlayers.postValue(players);
 
                 }
