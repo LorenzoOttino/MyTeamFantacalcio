@@ -51,4 +51,10 @@ public class TeamViewModel extends AndroidViewModel {
     public void updatePlayerString(SharedPreferences preferences, int clickedItemIndex, String message){
         teamRepository.updatePlayerString(preferences, clickedItemIndex, message);
     }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        teamRepository.getRequestedPlayer().removeObserver(teamRepository.getObserver());
+    }
 }

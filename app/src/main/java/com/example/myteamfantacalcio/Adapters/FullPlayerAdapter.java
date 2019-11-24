@@ -39,8 +39,9 @@ public class FullPlayerAdapter extends RecyclerView.Adapter<FullPlayerAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        if(players.get(position) != null)
+        if(players.get(position) != null) {
             holder.playerName.setText(players.get(position).getName());
+        }
     }
 
     @Override
@@ -57,7 +58,6 @@ public class FullPlayerAdapter extends RecyclerView.Adapter<FullPlayerAdapter.Vi
         ViewHolder(View itemView){
             super(itemView);
             playerName = itemView.findViewById(R.id.playerNameField);
-            playerMark = itemView.findViewById(R.id.playerMarkField);
             isStarter = itemView.findViewById(R.id.isStarterSwitch);
             isStarter.setOnClickListener(this);
         }

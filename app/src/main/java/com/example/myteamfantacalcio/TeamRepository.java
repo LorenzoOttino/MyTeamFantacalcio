@@ -7,6 +7,7 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import com.example.myteamfantacalcio.Database.Competition;
 import com.example.myteamfantacalcio.Database.CompetitionDao;
@@ -30,6 +31,7 @@ public class TeamRepository {
     private MutableLiveData<List<Player>> allPlayers;
     private MutableLiveData<Player> requestedPlayer;
     private List<Player> playerList;
+    private Observer<Player> observer;
 
     private TeamRepository(Application application){
         CompetitionDatabase database = CompetitionDatabase.getInstance(application);
@@ -38,6 +40,13 @@ public class TeamRepository {
         allPlayers = new MutableLiveData<>();
         requestedPlayer = new MutableLiveData<>();
         playerList = new ArrayList<>();
+        observer = new Observer<Player>() {
+            @Override
+            public void onChanged(Player player) {
+                if(!playerList.contains(player))
+                    playerList.add(player);
+            }
+        };
     }
 
     public static synchronized TeamRepository getInstance(Application application){
@@ -154,7 +163,7 @@ public class TeamRepository {
             public void onResponse(Call<PlayerResponse> call, Response<PlayerResponse> response) {
                 if(response.isSuccessful()){
                     requestedPlayer.postValue(response.body().getPlayer());
-                    playerList.add(requestedPlayer.getValue());
+                    requestedPlayer.observeForever(observer);
                     allPlayers.postValue(playerList);
                 }
             }
@@ -165,4 +174,13 @@ public class TeamRepository {
             }
         });
     }
+
+    public MutableLiveData<Player> getRequestedPlayer(){
+        return requestedPlayer;
+    }
+
+    public Observer<Player> getObserver(){
+        return observer;
+    }
+
 }

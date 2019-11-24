@@ -33,7 +33,6 @@ public class PlayerNameAdapter extends RecyclerView.Adapter<PlayerNameAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.textView.setText(playerNames.get(position));
-
     }
 
     @Override
